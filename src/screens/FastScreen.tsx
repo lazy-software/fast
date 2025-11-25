@@ -36,15 +36,13 @@ export default function FastScreen() {
 
     return (
         <div className="p-4 pb-12 max-w-md mx-auto w-full h-full flex flex-col">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Fast</h1>
-
             <div className="flex-1 flex flex-col items-center justify-center space-y-12">
                 <div className="text-center space-y-2">
                     <div className="text-7xl font-mono font-bold tracking-tight text-gray-900 dark:text-white">
                         {formatTime(elapsed)}
                     </div>
                     <div className="text-gray-500 dark:text-gray-400 font-medium">
-                        {isFasting ? 'Fasting Time' : 'Ready to Fast'}
+                        {isFasting ? 'Fasting Time' : ''}
                     </div>
                 </div>
 

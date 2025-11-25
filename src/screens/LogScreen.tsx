@@ -1,8 +1,6 @@
 export default function LogScreen() {
     return (
         <div className="p-4 pb-12 max-w-md mx-auto w-full">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">History</h1>
-
             <div className="space-y-3">
                 <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700/50">
                     <div>
