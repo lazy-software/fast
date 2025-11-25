@@ -1,6 +1,6 @@
 export default function LogScreen() {
     return (
-        <div className="h-full px-4">
+        <div className="p-4 pb-12 max-w-md mx-auto w-full">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">History</h1>
 
             <div className="space-y-3">

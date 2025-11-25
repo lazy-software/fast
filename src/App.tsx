@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import FastScreen from './screens/FastScreen';
 import LogScreen from './screens/LogScreen';
 import BottomNav from './components/BottomNav';
@@ -7,14 +7,24 @@ type Screen = 'fast' | 'log';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('fast');
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
+  }, [currentScreen]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
-      <div className="max-w-md mx-auto bg-white dark:bg-gray-900 min-h-screen shadow-2xl relative transition-colors duration-200 pb-24">
-        <main className="pt-4 h-full">
+    <div className="h-[100dvh] bg-gray-100 dark:bg-gray-950 transition-colors duration-200 flex flex-col overflow-hidden">
+      <div className="max-w-md mx-auto w-full h-full bg-white dark:bg-gray-900 shadow-2xl relative transition-colors duration-200 flex flex-col overflow-hidden">
+
+        {/* Main Content */}
+        <main ref={mainRef} className="flex-1 overflow-y-auto pt-4">
           {currentScreen === 'fast' ? <FastScreen /> : <LogScreen />}
         </main>
 
+        {/* Bottom Navigation */}
         <BottomNav activeTab={currentScreen} onTabChange={setCurrentScreen} />
       </div>
     </div>

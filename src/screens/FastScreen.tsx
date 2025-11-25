@@ -35,7 +35,7 @@ export default function FastScreen() {
     };
 
     return (
-        <div className="h-full flex flex-col px-4">
+        <div className="p-4 pb-12 max-w-md mx-auto w-full h-full flex flex-col">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Fast</h1>
 
             <div className="flex-1 flex flex-col items-center justify-center space-y-12">
@@ -51,15 +51,15 @@ export default function FastScreen() {
                 <button
                     onClick={toggleFast}
                     className={`w-full max-w-xs py-4 rounded-xl text-lg font-semibold transition-all transform active:scale-95 shadow-sm ${isFasting
-                            ? 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/30 dark:hover:bg-red-900/30'
-                            : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/30 dark:bg-blue-600 dark:hover:bg-blue-500'
+                        ? 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-900/30 dark:hover:bg-red-900/30'
+                        : 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/30 dark:bg-blue-600 dark:hover:bg-blue-500'
                         }`}
                 >
                     {isFasting ? 'End Fast' : 'Start Fast'}
                 </button>
 
                 {isFasting && startTime && (
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700/50 w-full max-w-xs">
+                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700/50 w-full max-w-xs shadow-sm">
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-gray-500 dark:text-gray-400">Started</span>
                             <span className="font-medium text-gray-900 dark:text-white">
