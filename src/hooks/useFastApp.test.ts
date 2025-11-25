@@ -7,7 +7,7 @@ describe('useFastApp', () => {
         localStorage.clear();
         vi.clearAllMocks();
         // Mock crypto.randomUUID
-        Object.defineProperty(global, 'crypto', {
+        Object.defineProperty(globalThis, 'crypto', {
             value: {
                 randomUUID: () => 'test-uuid'
             }
