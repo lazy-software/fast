@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useFastApp } from '../hooks/useFastApp';
 
 export default function FastScreen() {
-    const [isFasting, setIsFasting] = useState(false);
-    const [startTime, setStartTime] = useState<number | null>(null);
+    const { activeFast, startFast, endFast } = useFastApp();
     const [elapsed, setElapsed] = useState(0);
+
+    const isFasting = activeFast !== null;
+    const startTime = activeFast?.startTime ?? null;
 
     useEffect(() => {
         let interval: number;
@@ -17,13 +20,10 @@ export default function FastScreen() {
 
     const toggleFast = () => {
         if (isFasting) {
-            setIsFasting(false);
-            setStartTime(null);
+            endFast();
             setElapsed(0);
-            // TODO: Save log
         } else {
-            setIsFasting(true);
-            setStartTime(Date.now());
+            startFast();
         }
     };
 
