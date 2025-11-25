@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import FastScreen from './screens/FastScreen';
-import LogScreen from './screens/LogScreen';
+import FastScreen from './components/FastScreen';
+import LogScreen from './components/LogScreen';
 import BottomNav from './components/BottomNav';
 
 type Screen = 'fast' | 'log';
