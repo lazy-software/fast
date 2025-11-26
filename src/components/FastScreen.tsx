@@ -3,7 +3,12 @@ import { useFastApp } from '../hooks/useFastApp';
 
 export default function FastScreen() {
     const { activeFast, startFast, endFast } = useFastApp();
-    const [elapsed, setElapsed] = useState(0);
+    const [elapsed, setElapsed] = useState(() => {
+        if (activeFast?.startTime) {
+            return Date.now() - activeFast.startTime;
+        }
+        return 0;
+    });
 
     const isFasting = activeFast !== null;
     const startTime = activeFast?.startTime ?? null;
@@ -41,9 +46,7 @@ export default function FastScreen() {
                     <div className="text-7xl font-mono font-bold tracking-tight text-gray-900 dark:text-white">
                         {formatTime(elapsed)}
                     </div>
-                    <div className="text-gray-500 dark:text-gray-400 font-medium">
-                        {isFasting ? 'Fasting Time' : ''}
-                    </div>
+
                 </div>
 
                 <button

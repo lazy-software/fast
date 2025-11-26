@@ -1,0 +1,114 @@
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import FastScreen from './FastScreen';
+import * as useFastAppHook from '../hooks/useFastApp';
+
+// Mock the hook
+vi.mock('../hooks/useFastApp');
+
+describe('FastScreen', () => {
+    const mockStartFast = vi.fn();
+    const mockEndFast = vi.fn();
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        // Use fake timers to test interval
+        vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('renders start button when not fasting', () => {
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: null,
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn()
+        });
+
+        render(<FastScreen />);
+        expect(screen.getByText('Start Fast')).toBeInTheDocument();
+        expect(screen.getByText('00:00:00')).toBeInTheDocument();
+
+
+    });
+
+    it('renders end button and correct time when fasting', () => {
+        const startTime = Date.now() - 3600000; // 1 hour ago
+
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: { id: '1', startTime },
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn()
+        });
+
+        render(<FastScreen />);
+
+        // Verify timer initializes correctly (not 00:00:00) (1.0.0 change)
+        expect(screen.getByText('01:00:00')).toBeInTheDocument();
+        expect(screen.getByText('End Fast')).toBeInTheDocument();
+
+
+    });
+
+    it('updates timer every second', () => {
+        const startTime = Date.now();
+
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: { id: '1', startTime },
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn()
+        });
+
+        render(<FastScreen />);
+        expect(screen.getByText('00:00:00')).toBeInTheDocument();
+
+        act(() => {
+            vi.advanceTimersByTime(1000);
+        });
+
+        expect(screen.getByText('00:00:01')).toBeInTheDocument();
+    });
+
+    it('calls startFast when start button clicked', () => {
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: null,
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn()
+        });
+
+        render(<FastScreen />);
+        fireEvent.click(screen.getByText('Start Fast'));
+        expect(mockStartFast).toHaveBeenCalled();
+    });
+
+    it('calls endFast when end button clicked', () => {
+        const startTime = Date.now();
+
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: { id: '1', startTime },
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn()
+        });
+
+        render(<FastScreen />);
+        fireEvent.click(screen.getByText('End Fast'));
+        expect(mockEndFast).toHaveBeenCalled();
+    });
+});

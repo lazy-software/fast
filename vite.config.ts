@@ -14,6 +14,7 @@ export default defineConfig({
         short_name: 'Lazy Fast',
         description: 'A minimal, lazy fasting tracker',
         theme_color: '#ffffff',
+        orientation: 'portrait',
         icons: [
           {
             src: 'icon-192.png',
