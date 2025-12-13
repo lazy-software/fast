@@ -95,4 +95,22 @@ describe('useFastApp', () => {
         expect(result.current.fasts[0].endTime).toBe(newEndTime);
         expect(result.current.fasts[0].duration).toBe(newEndTime - newStartTime);
     });
+
+    it('should update active fast', () => {
+        const { result } = renderHook(() => useFastApp());
+
+        act(() => {
+            result.current.startFast();
+        });
+
+        const newStartTime = Date.now() - 5000;
+
+        act(() => {
+            result.current.updateActiveFast({
+                startTime: newStartTime
+            });
+        });
+
+        expect(result.current.activeFast?.startTime).toBe(newStartTime);
+    });
 });
