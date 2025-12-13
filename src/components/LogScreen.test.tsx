@@ -27,7 +27,8 @@ describe('LogScreen', () => {
             startFast: vi.fn(),
             endFast: vi.fn(),
             deleteFast: mockDeleteFast,
-            updateFast: mockUpdateFast
+            updateFast: mockUpdateFast,
+            updateActiveFast: vi.fn()
         });
     });
 
@@ -46,7 +47,8 @@ describe('LogScreen', () => {
             startFast: vi.fn(),
             endFast: vi.fn(),
             deleteFast: mockDeleteFast,
-            updateFast: mockUpdateFast
+            updateFast: mockUpdateFast,
+            updateActiveFast: vi.fn()
         });
 
         render(<LogScreen />);

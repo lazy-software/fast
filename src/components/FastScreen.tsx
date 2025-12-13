@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import { useFastApp } from '../hooks/useFastApp';
 
 export default function FastScreen() {
-    const { activeFast, startFast, endFast } = useFastApp();
+    const { activeFast, startFast, endFast, updateActiveFast } = useFastApp();
+    const [editStartTime, setEditStartTime] = useState('');
+    const [isEditingStart, setIsEditingStart] = useState(false);
     const [elapsed, setElapsed] = useState(() => {
         if (activeFast?.startTime) {
             return Date.now() - activeFast.startTime;
@@ -39,6 +41,34 @@ export default function FastScreen() {
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     };
 
+    const toDateTimeLocal = (timestamp: number) => {
+        const date = new Date(timestamp);
+        const offset = date.getTimezoneOffset() * 60000;
+        const localDate = new Date(date.getTime() - offset);
+        return localDate.toISOString().slice(0, 16);
+    };
+
+    const handleEditStart = () => {
+        if (startTime) {
+            setEditStartTime(toDateTimeLocal(startTime));
+            setIsEditingStart(true);
+        }
+    };
+
+    const handleSaveStart = () => {
+        const newStartTime = new Date(editStartTime).getTime();
+        if (!isNaN(newStartTime)) {
+            updateActiveFast({ startTime: newStartTime });
+        }
+        setIsEditingStart(false);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            handleSaveStart();
+        }
+    };
+
     return (
         <div className="p-4 pb-12 max-w-md mx-auto w-full h-full flex flex-col">
             <div className="flex-1 flex flex-col items-center justify-center space-y-12">
@@ -60,13 +90,63 @@ export default function FastScreen() {
                 </button>
 
                 {isFasting && startTime && (
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700/50 w-full max-w-xs shadow-sm">
-                        <div className="flex justify-between items-center text-sm">
-                            <span className="text-gray-500 dark:text-gray-400">Started</span>
-                            <span className="font-medium text-gray-900 dark:text-white">
-                                {new Date(startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </span>
-                        </div>
+                    <div className="w-full max-w-xs transition-all duration-300">
+                        {isEditingStart ? (
+                            <div className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 space-y-4">
+                                <div className="space-y-3">
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start Date</label>
+                                        <input
+                                            type="text"
+                                            value={editStartTime.split('T')[0]}
+                                            onChange={(e) => setEditStartTime(`${e.target.value}T${editStartTime.split('T')[1] || '00:00'}`)}
+                                            onKeyDown={handleKeyDown}
+                                            className="w-full p-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                            placeholder="YYYY-MM-DD"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start Time</label>
+                                        <input
+                                            type="text"
+                                            value={editStartTime.split('T')[1]?.slice(0, 5) || '00:00'}
+                                            onChange={(e) => setEditStartTime(`${editStartTime.split('T')[0]}T${e.target.value}`)}
+                                            onKeyDown={handleKeyDown}
+                                            className="w-full p-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                            placeholder="HH:MM"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex gap-2 pt-1">
+                                    <button
+                                        onClick={handleSaveStart}
+                                        className="flex-1 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={() => setIsEditingStart(false)}
+                                        className="flex-1 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700/50 shadow-sm hover:shadow-md transition-all cursor-pointer group" onClick={handleEditStart}>
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="text-gray-500 dark:text-gray-400">Started</span>
+                                    <div className="flex items-center gap-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                        </svg>
+                                        <span className="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                            {new Date(startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

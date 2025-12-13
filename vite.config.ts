@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
@@ -14,6 +15,7 @@ export default defineConfig({
         short_name: 'Lazy Fast',
         description: 'A minimal, lazy fasting tracker',
         theme_color: '#ffffff',
+        display: 'standalone',
         orientation: 'portrait',
         icons: [
           {
@@ -30,4 +32,7 @@ export default defineConfig({
       }
     })
   ],
+  server: {
+    port: 3000,
+  }
 });
