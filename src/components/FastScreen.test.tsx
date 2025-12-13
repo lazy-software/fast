@@ -9,6 +9,7 @@ vi.mock('../hooks/useFastApp');
 describe('FastScreen', () => {
     const mockStartFast = vi.fn();
     const mockEndFast = vi.fn();
+    const mockUpdateActiveFast = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -27,14 +28,13 @@ describe('FastScreen', () => {
             startFast: mockStartFast,
             endFast: mockEndFast,
             deleteFast: vi.fn(),
-            updateFast: vi.fn()
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
         });
 
         render(<FastScreen />);
         expect(screen.getByText('Start Fast')).toBeInTheDocument();
         expect(screen.getByText('00:00:00')).toBeInTheDocument();
-
-
     });
 
     it('renders end button and correct time when fasting', () => {
@@ -46,7 +46,8 @@ describe('FastScreen', () => {
             startFast: mockStartFast,
             endFast: mockEndFast,
             deleteFast: vi.fn(),
-            updateFast: vi.fn()
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
         });
 
         render(<FastScreen />);
@@ -54,8 +55,6 @@ describe('FastScreen', () => {
         // Verify timer initializes correctly (not 00:00:00) (1.0.0 change)
         expect(screen.getByText('01:00:00')).toBeInTheDocument();
         expect(screen.getByText('End Fast')).toBeInTheDocument();
-
-
     });
 
     it('updates timer every second', () => {
@@ -67,7 +66,8 @@ describe('FastScreen', () => {
             startFast: mockStartFast,
             endFast: mockEndFast,
             deleteFast: vi.fn(),
-            updateFast: vi.fn()
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
         });
 
         render(<FastScreen />);
@@ -87,7 +87,8 @@ describe('FastScreen', () => {
             startFast: mockStartFast,
             endFast: mockEndFast,
             deleteFast: vi.fn(),
-            updateFast: vi.fn()
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
         });
 
         render(<FastScreen />);
@@ -104,11 +105,116 @@ describe('FastScreen', () => {
             startFast: mockStartFast,
             endFast: mockEndFast,
             deleteFast: vi.fn(),
-            updateFast: vi.fn()
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
         });
 
         render(<FastScreen />);
         fireEvent.click(screen.getByText('End Fast'));
         expect(mockEndFast).toHaveBeenCalled();
+    });
+
+    it('switches to edit mode when start time clicked', () => {
+        const startTime = new Date('2023-01-01T12:00:00').getTime();
+
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: { id: '1', startTime },
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
+        });
+
+        render(<FastScreen />);
+
+        // Find the container that has the click handler (it's the parent of "Started" text)
+        // Since we don't have a reliable test id, we'll click the element containing the time
+        fireEvent.click(screen.getByText(/12:00 PM/i));
+
+        expect(screen.getByPlaceholderText('YYYY-MM-DD')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('HH:MM')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('2023-01-01')).toBeInTheDocument();
+        expect(screen.getByDisplayValue('12:00')).toBeInTheDocument();
+    });
+
+    it('saves changes when save button clicked', () => {
+        const startTime = new Date('2023-01-01T12:00:00').getTime();
+
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: { id: '1', startTime },
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
+        });
+
+        render(<FastScreen />);
+        fireEvent.click(screen.getByText(/12:00 PM/i));
+
+        const timeInput = screen.getByPlaceholderText('HH:MM');
+        fireEvent.change(timeInput, { target: { value: '13:00' } });
+
+        fireEvent.click(screen.getByText('Save'));
+
+        expect(mockUpdateActiveFast).toHaveBeenCalledWith({
+            startTime: new Date('2023-01-01T13:00:00').getTime()
+        });
+        expect(screen.queryByPlaceholderText('HH:MM')).not.toBeInTheDocument();
+    });
+
+    it('cancels changes when cancel button clicked', () => {
+        const startTime = new Date('2023-01-01T12:00:00').getTime();
+
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: { id: '1', startTime },
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
+        });
+
+        render(<FastScreen />);
+        fireEvent.click(screen.getByText(/12:00 PM/i));
+
+        const timeInput = screen.getByPlaceholderText('HH:MM');
+        fireEvent.change(timeInput, { target: { value: '13:00' } });
+
+        fireEvent.click(screen.getByText('Cancel'));
+
+        expect(mockUpdateActiveFast).not.toHaveBeenCalled();
+        expect(screen.queryByPlaceholderText('HH:MM')).not.toBeInTheDocument();
+    });
+
+    it('saves changes when Enter key pressed', () => {
+        const startTime = new Date('2023-01-01T12:00:00').getTime();
+
+        vi.spyOn(useFastAppHook, 'useFastApp').mockReturnValue({
+            activeFast: { id: '1', startTime },
+            fasts: [],
+            startFast: mockStartFast,
+            endFast: mockEndFast,
+            deleteFast: vi.fn(),
+            updateFast: vi.fn(),
+            updateActiveFast: mockUpdateActiveFast
+        });
+
+        render(<FastScreen />);
+        fireEvent.click(screen.getByText(/12:00 PM/i));
+
+        const timeInput = screen.getByPlaceholderText('HH:MM');
+        fireEvent.change(timeInput, { target: { value: '13:00' } });
+
+        fireEvent.keyDown(timeInput, { key: 'Enter', code: 'Enter' });
+
+        expect(mockUpdateActiveFast).toHaveBeenCalledWith({
+            startTime: new Date('2023-01-01T13:00:00').getTime()
+        });
+        expect(screen.queryByPlaceholderText('HH:MM')).not.toBeInTheDocument();
     });
 });
