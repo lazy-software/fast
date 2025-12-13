@@ -73,12 +73,26 @@ export function useFastApp() {
         }));
     };
 
+    const updateActiveFast = (updates: { startTime?: number }) => {
+        setState(prev => {
+            if (!prev.activeFast) return prev;
+            return {
+                ...prev,
+                activeFast: {
+                    ...prev.activeFast,
+                    ...updates
+                }
+            };
+        });
+    };
+
     return {
         activeFast: state.activeFast,
         fasts: state.fasts,
         startFast,
         endFast,
         deleteFast,
-        updateFast
+        updateFast,
+        updateActiveFast
     };
 }

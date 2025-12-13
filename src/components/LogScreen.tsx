@@ -69,6 +69,12 @@ export default function LogScreen() {
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
+        if (e.key === 'Enter') {
+            handleSave(id);
+        }
+    };
+
     return (
         <div className="p-4 pb-12 max-w-md mx-auto w-full">
             <div className="space-y-3">
@@ -88,6 +94,7 @@ export default function LogScreen() {
                                                 type="text"
                                                 value={editStartTime.split('T')[0]}
                                                 onChange={(e) => setEditStartTime(`${e.target.value}T${editStartTime.split('T')[1] || '00:00'}`)}
+                                                onKeyDown={(e) => handleKeyDown(e, fast.id)}
                                                 className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 placeholder="YYYY-MM-DD"
                                             />
@@ -98,6 +105,7 @@ export default function LogScreen() {
                                                 type="text"
                                                 value={editStartTime.split('T')[1]?.slice(0, 5) || '00:00'}
                                                 onChange={(e) => setEditStartTime(`${editStartTime.split('T')[0]}T${e.target.value}`)}
+                                                onKeyDown={(e) => handleKeyDown(e, fast.id)}
                                                 className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 placeholder="HH:MM"
                                             />
@@ -110,6 +118,7 @@ export default function LogScreen() {
                                                 type="text"
                                                 value={editEndTime.split('T')[0]}
                                                 onChange={(e) => setEditEndTime(`${e.target.value}T${editEndTime.split('T')[1] || '00:00'}`)}
+                                                onKeyDown={(e) => handleKeyDown(e, fast.id)}
                                                 className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 placeholder="YYYY-MM-DD"
                                             />
@@ -120,6 +129,7 @@ export default function LogScreen() {
                                                 type="text"
                                                 value={editEndTime.split('T')[1]?.slice(0, 5) || '00:00'}
                                                 onChange={(e) => setEditEndTime(`${editEndTime.split('T')[0]}T${e.target.value}`)}
+                                                onKeyDown={(e) => handleKeyDown(e, fast.id)}
                                                 className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 placeholder="HH:MM"
                                             />
