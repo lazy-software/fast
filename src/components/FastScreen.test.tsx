@@ -133,8 +133,8 @@ describe('FastScreen', () => {
         // Since we don't have a reliable test id, we'll click the element containing the time
         fireEvent.click(screen.getByText(/12:00 PM/i));
 
-        expect(screen.getByPlaceholderText('YYYY-MM-DD')).toBeInTheDocument();
-        expect(screen.getByPlaceholderText('HH:MM')).toBeInTheDocument();
+        expect(screen.getByLabelText(/start date/i)).toBeInTheDocument();
+        expect(screen.getByLabelText(/start time/i)).toBeInTheDocument();
         expect(screen.getByDisplayValue('2023-01-01')).toBeInTheDocument();
         expect(screen.getByDisplayValue('12:00')).toBeInTheDocument();
     });
@@ -155,7 +155,7 @@ describe('FastScreen', () => {
         render(<FastScreen />);
         fireEvent.click(screen.getByText(/12:00 PM/i));
 
-        const timeInput = screen.getByPlaceholderText('HH:MM');
+        const timeInput = screen.getByLabelText(/start time/i);
         fireEvent.change(timeInput, { target: { value: '13:00' } });
 
         fireEvent.click(screen.getByText('Save'));
@@ -163,7 +163,7 @@ describe('FastScreen', () => {
         expect(mockUpdateActiveFast).toHaveBeenCalledWith({
             startTime: new Date('2023-01-01T13:00:00').getTime()
         });
-        expect(screen.queryByPlaceholderText('HH:MM')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText(/start time/i)).not.toBeInTheDocument();
     });
 
     it('cancels changes when cancel button clicked', () => {
@@ -182,13 +182,13 @@ describe('FastScreen', () => {
         render(<FastScreen />);
         fireEvent.click(screen.getByText(/12:00 PM/i));
 
-        const timeInput = screen.getByPlaceholderText('HH:MM');
+        const timeInput = screen.getByLabelText(/start time/i);
         fireEvent.change(timeInput, { target: { value: '13:00' } });
 
         fireEvent.click(screen.getByText('Cancel'));
 
         expect(mockUpdateActiveFast).not.toHaveBeenCalled();
-        expect(screen.queryByPlaceholderText('HH:MM')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText(/start time/i)).not.toBeInTheDocument();
     });
 
     it('saves changes when Enter key pressed', () => {
@@ -207,7 +207,7 @@ describe('FastScreen', () => {
         render(<FastScreen />);
         fireEvent.click(screen.getByText(/12:00 PM/i));
 
-        const timeInput = screen.getByPlaceholderText('HH:MM');
+        const timeInput = screen.getByLabelText(/start time/i);
         fireEvent.change(timeInput, { target: { value: '13:00' } });
 
         fireEvent.keyDown(timeInput, { key: 'Enter', code: 'Enter' });
@@ -215,6 +215,6 @@ describe('FastScreen', () => {
         expect(mockUpdateActiveFast).toHaveBeenCalledWith({
             startTime: new Date('2023-01-01T13:00:00').getTime()
         });
-        expect(screen.queryByPlaceholderText('HH:MM')).not.toBeInTheDocument();
+        expect(screen.queryByLabelText(/start time/i)).not.toBeInTheDocument();
     });
 });

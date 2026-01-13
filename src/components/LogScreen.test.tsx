@@ -102,4 +102,47 @@ describe('LogScreen', () => {
         expect(screen.getByText('Save')).toBeInTheDocument();
         expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
+    it('exports to CSV when button clicked', () => {
+        const createObjectURLMock = vi.fn(() => 'blob:url');
+        const revokeObjectURLMock = vi.fn();
+
+        // Save original implementation
+        const originalCreateObjectURL = URL.createObjectURL;
+        const originalRevokeObjectURL = URL.revokeObjectURL;
+
+        // Apply mocks
+        URL.createObjectURL = createObjectURLMock;
+        URL.revokeObjectURL = revokeObjectURLMock;
+
+        const linkClickSpy = vi.fn();
+
+        // Mock createElement to capture the anchor tag
+        const originalCreateElement = document.createElement;
+        vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
+            const el = originalCreateElement.call(document, tagName);
+            if (tagName === 'a') {
+                el.click = linkClickSpy;
+            }
+            return el;
+        });
+
+        render(<LogScreen />);
+
+        const exportButton = screen.getByText('Export CSV');
+        fireEvent.click(exportButton);
+
+        expect(createObjectURLMock).toHaveBeenCalled();
+        expect(linkClickSpy).toHaveBeenCalled();
+
+        // Verify Blob content
+        const calls = createObjectURLMock.mock.calls as unknown as [Blob][];
+        const blob = calls[0][0];
+        expect(blob).toBeInstanceOf(Blob);
+        expect(blob.type).toBe('text/csv');
+
+        // Cleanup matches
+        URL.createObjectURL = originalCreateObjectURL;
+        URL.revokeObjectURL = originalRevokeObjectURL;
+        vi.restoreAllMocks();
+    });
 });
