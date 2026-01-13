@@ -93,27 +93,25 @@ export default function FastScreen() {
                     <div className="w-full max-w-xs transition-all duration-300">
                         {isEditingStart ? (
                             <div className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 space-y-4">
-                                <div className="space-y-3">
-                                    <div className="space-y-2">
+                                <div className="flex flex-col space-y-4">
+                                    <div className="space-y-1">
                                         <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start Date</label>
                                         <input
-                                            type="text"
+                                            type="date"
                                             value={editStartTime.split('T')[0]}
                                             onChange={(e) => setEditStartTime(`${e.target.value}T${editStartTime.split('T')[1] || '00:00'}`)}
                                             onKeyDown={handleKeyDown}
-                                            className="w-full p-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                            placeholder="YYYY-MM-DD"
+                                            className="w-full p-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none"
                                         />
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-1">
                                         <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start Time</label>
                                         <input
-                                            type="text"
+                                            type="time"
                                             value={editStartTime.split('T')[1]?.slice(0, 5) || '00:00'}
                                             onChange={(e) => setEditStartTime(`${editStartTime.split('T')[0]}T${e.target.value}`)}
                                             onKeyDown={handleKeyDown}
-                                            className="w-full p-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                            placeholder="HH:MM"
+                                            className="w-full p-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none"
                                         />
                                     </div>
                                 </div>
