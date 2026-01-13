@@ -135,7 +135,8 @@ describe('LogScreen', () => {
         expect(linkClickSpy).toHaveBeenCalled();
 
         // Verify Blob content
-        const blob = createObjectURLMock.mock.calls[0][0];
+        const calls = createObjectURLMock.mock.calls as unknown as [Blob][];
+        const blob = calls[0][0];
         expect(blob).toBeInstanceOf(Blob);
         expect(blob.type).toBe('text/csv');
 
