@@ -103,8 +103,17 @@ describe('LogScreen', () => {
         expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
     it('exports to CSV when button clicked', () => {
-        global.URL.createObjectURL = vi.fn(() => 'blob:url');
-        global.URL.revokeObjectURL = vi.fn();
+        const createObjectURLMock = vi.fn(() => 'blob:url');
+        const revokeObjectURLMock = vi.fn();
+
+        // Save original implementation
+        const originalCreateObjectURL = URL.createObjectURL;
+        const originalRevokeObjectURL = URL.revokeObjectURL;
+
+        // Apply mocks
+        URL.createObjectURL = createObjectURLMock;
+        URL.revokeObjectURL = revokeObjectURLMock;
+
         const linkClickSpy = vi.fn();
 
         // Mock createElement to capture the anchor tag
@@ -122,14 +131,17 @@ describe('LogScreen', () => {
         const exportButton = screen.getByText('Export CSV');
         fireEvent.click(exportButton);
 
-        expect(global.URL.createObjectURL).toHaveBeenCalled();
+        expect(createObjectURLMock).toHaveBeenCalled();
         expect(linkClickSpy).toHaveBeenCalled();
 
         // Verify Blob content
-        const blob = (global.URL.createObjectURL as any).mock.calls[0][0];
+        const blob = createObjectURLMock.mock.calls[0][0];
         expect(blob).toBeInstanceOf(Blob);
         expect(blob.type).toBe('text/csv');
 
+        // Cleanup matches
+        URL.createObjectURL = originalCreateObjectURL;
+        URL.revokeObjectURL = originalRevokeObjectURL;
         vi.restoreAllMocks();
     });
 });
