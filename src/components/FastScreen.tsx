@@ -93,38 +93,44 @@ export default function FastScreen() {
                     <div className="w-full max-w-xs transition-all duration-300">
                         {isEditingStart ? (
                             <div className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 space-y-4">
-                                <div className="flex flex-col space-y-4">
-                                    <div className="space-y-1">
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start Date</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="space-y-2">
+                                        <label htmlFor="start-date" className="block text-sm text-gray-600 dark:text-gray-400">Start Date</label>
                                         <input
-                                            type="date"
+                                            id="start-date"
+                                            type="text"
                                             value={editStartTime.split('T')[0]}
                                             onChange={(e) => setEditStartTime(`${e.target.value}T${editStartTime.split('T')[1] || '00:00'}`)}
                                             onKeyDown={handleKeyDown}
-                                            className="w-full p-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none"
+                                            className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="YYYY-MM-DD"
                                         />
+
                                     </div>
-                                    <div className="space-y-1">
-                                        <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Start Time</label>
+                                    <div className="space-y-2">
+                                        <label htmlFor="start-time" className="block text-sm text-gray-600 dark:text-gray-400">Start Time</label>
                                         <input
-                                            type="time"
+                                            id="start-time"
+                                            type="text"
                                             value={editStartTime.split('T')[1]?.slice(0, 5) || '00:00'}
                                             onChange={(e) => setEditStartTime(`${editStartTime.split('T')[0]}T${e.target.value}`)}
                                             onKeyDown={handleKeyDown}
-                                            className="w-full p-3 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white text-base focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none"
+                                            className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="HH:MM"
                                         />
+
                                     </div>
                                 </div>
-                                <div className="flex gap-2 pt-1">
+                                <div className="flex gap-2">
                                     <button
                                         onClick={handleSaveStart}
-                                        className="flex-1 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                                        className="flex-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                                     >
                                         Save
                                     </button>
                                     <button
                                         onClick={() => setIsEditingStart(false)}
-                                        className="flex-1 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                        className="flex-1 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                                     >
                                         Cancel
                                     </button>
