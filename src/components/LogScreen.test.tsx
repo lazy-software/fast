@@ -102,4 +102,34 @@ describe('LogScreen', () => {
         expect(screen.getByText('Save')).toBeInTheDocument();
         expect(screen.getByText('Cancel')).toBeInTheDocument();
     });
+    it('exports to CSV when button clicked', () => {
+        global.URL.createObjectURL = vi.fn(() => 'blob:url');
+        global.URL.revokeObjectURL = vi.fn();
+        const linkClickSpy = vi.fn();
+
+        // Mock createElement to capture the anchor tag
+        const originalCreateElement = document.createElement;
+        vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
+            const el = originalCreateElement.call(document, tagName);
+            if (tagName === 'a') {
+                el.click = linkClickSpy;
+            }
+            return el;
+        });
+
+        render(<LogScreen />);
+
+        const exportButton = screen.getByText('Export CSV');
+        fireEvent.click(exportButton);
+
+        expect(global.URL.createObjectURL).toHaveBeenCalled();
+        expect(linkClickSpy).toHaveBeenCalled();
+
+        // Verify Blob content
+        const blob = (global.URL.createObjectURL as any).mock.calls[0][0];
+        expect(blob).toBeInstanceOf(Blob);
+        expect(blob.type).toBe('text/csv');
+
+        vi.restoreAllMocks();
+    });
 });

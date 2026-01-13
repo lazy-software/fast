@@ -75,8 +75,41 @@ export default function LogScreen() {
         }
     };
 
+    const handleExport = () => {
+        const headers = ['id', 'startTime', 'endTime', 'duration'];
+        const csvContent = [
+            headers.join(','),
+            ...fasts.map(fast => [fast.id, fast.startTime, fast.endTime, fast.duration].join(','))
+        ].join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'fast-history.csv';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="p-4 pb-12 max-w-md mx-auto w-full">
+            <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">History</h2>
+                {fasts.length > 0 && (
+                    <button
+                        onClick={handleExport}
+                        className="px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors flex items-center gap-2"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Export CSV
+                    </button>
+                )}
+            </div>
+
             <div className="space-y-3">
                 {fasts.length === 0 ? (
                     <p className="text-center text-gray-500 dark:text-gray-400 py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-700 transition-colors">
