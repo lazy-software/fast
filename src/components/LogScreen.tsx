@@ -95,8 +95,7 @@ export default function LogScreen() {
 
     return (
         <div className="p-4 pb-12 max-w-md mx-auto w-full">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">History</h2>
+            <div className="flex justify-end mb-4">
                 {fasts.length > 0 && (
                     <button
                         onClick={handleExport}
