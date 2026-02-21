@@ -30,7 +30,7 @@ describe('StatsScreen', () => {
         expect(totalTimeVal).toHaveTextContent('0h');
     });
 
-    it('calculates average, total, max, and p90 correctly', () => {
+    it('calculates average, total, max correctly', () => {
         mockUseFastApp.mockReturnValue({
             fasts: [
                 { duration: 10 * 60 * 60 * 1000 }, // 10h
@@ -58,10 +58,6 @@ describe('StatsScreen', () => {
         // Max frequency = 24h
         const maxFastVal = screen.getByText('Longest Fast').nextElementSibling;
         expect(maxFastVal).toHaveTextContent('24h 0m');
-
-        // p90 frequency = 24h (index 4 of [10, 12, 14, 16, 24]) - index = math.ceil(0.9 * 5) - 1 = 5 - 1 = 4
-        const p90FastVal = screen.getByText('p90 Fast').nextElementSibling;
-        expect(p90FastVal).toHaveTextContent('24h 0m');
     });
 
     it('formats durations correctly for minutes', () => {

@@ -1,4 +1,7 @@
 import { useFastApp } from '../hooks/useFastApp';
+import DurationChart from './charts/DurationChart';
+import WindowChart from './charts/WindowChart';
+import DistributionChart from './charts/DistributionChart';
 
 export default function StatsScreen() {
     const { fasts } = useFastApp();
@@ -18,24 +21,17 @@ export default function StatsScreen() {
                 totalDuration: 0,
                 averageDuration: 0,
                 maxDuration: 0,
-                p90Duration: 0,
             };
         }
 
         const durations = fasts.map((f) => f.duration).sort((a, b) => a - b);
         const totalDuration = durations.reduce((sum, curr) => sum + curr, 0);
 
-        const getPercentile = (percentile: number) => {
-            const index = Math.ceil((percentile / 100) * durations.length) - 1;
-            return durations[index];
-        };
-
         return {
             totalFasts: fasts.length,
             totalDuration,
             averageDuration: totalDuration / fasts.length,
             maxDuration: durations[durations.length - 1],
-            p90Duration: getPercentile(90),
         };
     };
 
@@ -68,11 +64,10 @@ export default function StatsScreen() {
                     title="Longest Fast"
                     value={formatDuration(stats.maxDuration)}
                 />
-                <StatCard
-                    title="p90 Fast"
-                    value={formatDuration(stats.p90Duration)}
-                />
             </div>
+            <DurationChart />
+            <WindowChart />
+            <DistributionChart />
         </div>
     );
 }
