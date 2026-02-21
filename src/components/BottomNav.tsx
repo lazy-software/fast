@@ -1,4 +1,4 @@
-type Tab = 'fast' | 'log';
+type Tab = 'fast' | 'log' | 'stats';
 
 interface BottomNavProps {
     activeTab: Tab;
@@ -26,6 +26,16 @@ export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
                     }`}
             >
                 Log
+            </button>
+            <div className="w-px bg-gray-200 dark:bg-gray-800 mx-2"></div>
+            <button
+                onClick={() => onTabChange('stats')}
+                className={`flex-1 py-2 text-center font-medium rounded-lg transition-colors ${activeTab === 'stats'
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30'
+                    : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                    }`}
+            >
+                Stats
             </button>
         </div>
     );

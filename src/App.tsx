@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import FastScreen from './components/FastScreen';
 import LogScreen from './components/LogScreen';
+import StatsScreen from './components/StatsScreen';
 import BottomNav from './components/BottomNav';
 
-type Screen = 'fast' | 'log';
+type Screen = 'fast' | 'log' | 'stats';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('fast');
@@ -21,7 +22,7 @@ function App() {
 
         {/* Main Content */}
         <main ref={mainRef} className="flex-1 overflow-y-auto pt-4">
-          {currentScreen === 'fast' ? <FastScreen /> : <LogScreen />}
+          {currentScreen === 'fast' ? <FastScreen /> : currentScreen === 'log' ? <LogScreen /> : <StatsScreen />}
         </main>
 
         {/* Bottom Navigation */}
