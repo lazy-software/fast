@@ -115,20 +115,7 @@ export default function WindowChart() {
 
                 {/* Overlay exact ranges as vertical lines behind the scatter points */}
                 <div className="absolute inset-0 pointer-events-none" style={{ left: '40px', right: '10px', top: '10px', bottom: '26px' }}>
-                    {data.map((entry, index) => {
-                        // Calculate positions based on the chart's domain (0-24)
-                        const topPercent = 100 - ((entry.endHour / 24) * 100);
-                        let heightPercent = ((entry.duration) / 24) * 100;
-                        let adjustedTop = topPercent;
-
-                        // If the fast crosses midnight (endHour > 24), we need to represent it
-                        if (entry.endHour > 24) {
-                            adjustedTop = 100 - (24 / 24 * 100); // starts from the top visually
-                            // We just draw the line to the top of the chart for the overflowing part
-                        } else {
-                            adjustedTop = 100 - ((entry.endHour / 24) * 100);
-                        }
-
+                    {data.map(() => {
                         // X position is tricky to match exactly with Recharts category axis without exposing internals,
                         // so relying on the scatter points mostly, but this adds a nice range effect if properly aligned.
                         // We'll skip the complex CSS overlay for now and let the Scatter bubble size represent duration

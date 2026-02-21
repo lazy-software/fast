@@ -62,7 +62,7 @@ export default function DurationChart() {
                                 boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                                 color: '#111827'
                             }}
-                            formatter={(value: number) => [`${value}h`, 'Duration']}
+                            formatter={(value: any) => [`${value}h`, 'Duration']}
                             labelStyle={{ color: '#6B7280', marginBottom: '4px' }}
                         />
                         <Bar dataKey="durationHours" radius={[4, 4, 0, 0]}>
